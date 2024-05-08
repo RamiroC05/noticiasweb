@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sitio de Noticias</title>
+    <script src="https://cdn.ckeditor.com/4.10.0/standard/ckeditor.js"></script>
+</head>
+<body>
+    <h1>BIENVENIDO A NUESTRO SITIO DE NOTICIAS WEB</h1>
+
+    <form method="post" >
+        {{ form.hidden_tag() }}
+        <div style="margin-bottom: 20px; font-family: Arial, Helvetica, sans-serif;">
+            {{ form.titulo.label }} 
+            {{ form.titulo(style='width: 100%; padding: 10px; border: 2px solid #ccc; border-radius: 5px; box-sizing: border-box;') }}
+        </div>
+        <div style="margin-bottom: 20px; font-family: Arial, Helvetica, sans-serif;">
+            {{ form.descripcion.label }} 
+            {{ form.descripcion(style='width: 100%; padding: 10px; border: 2px solid #ccc; border-radius: 5px; box-sizing: border-box;')}}
+        </div>
+        <div style="margin-bottom: 20px; font-family: Arial, Helvetica, sans-serif;">
+            {{ form.categoria.label }} {{ form.categoria(style='width: 100%; padding: 10px; border: 2px solid #ccc; border-radius: 5px; box-sizing: border-box; ') }}
+        </div>
+        <br>
+        <div>
+            {{ form.label }} {{ form.contenido() }}
+        </div>
+        <br>
+
+        <div >
+            {{ form.submit(style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;") }}
+        </div>
+        
+    </form>
+
+    {{ ckeditor.load() }}
+    {{ ckeditor.config(name='contenido') }}
+
+</body>
+</html>

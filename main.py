@@ -1,0 +1,72 @@
+from flask import Flask, render_template, jsonify, request, redirect, url_for
+from flask_ckeditor import CKEditor
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField, SelectField
+from flask_ckeditor import CKEditorField
+from wtforms.validators import DataRequired
+from flask_mysqldb import MySQL
+from bs4 import BeautifulSoup
+
+
+app = Flask(__name__)
+#CONFIGURACION A LA BASE DE DATOS
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'PROGRAMACION2023'
+app.config['MYSQL_DB'] = 'proyecto_noticias'
+
+
+
+app.config['SECRET_KEY'] = 'your_secret_key_here'
+ckeditor = CKEditor(app)
+mysql=MySQL(app)
+
+def clean_html(html_content):
+    soup = BeautifulSoup(html_content, 'html.parser')
+    return soup.get_text()
+
+class PostForm(FlaskForm):
+    titulo = StringField('Título', validators=[DataRequired()])
+    descripcion =  StringField('Descripcion', validators=[DataRequired()])
+    categoria = SelectField('Categorias', coerce=int, validators=[DataRequired()])
+    contenido = CKEditorField('Contenido', validators=[DataRequired()])
+    submit = SubmitField('Publicar')
+
+
+
+@app.route('/', methods=['GET', 'POST'])
+def root():
+    categorias = listanoticias()
+
+    form = PostForm()
+    form.categoria.choices = [(c[0], c[1]) for c in categorias]  
+
+    if form.validate_on_submit():
+        #ACÁ OBTENGO LOS DATOS DEL FORMULARIO
+        titulo = form.titulo.data
+        descripcion = form.descripcion.data
+        contenido = clean_html(form.contenido.data)
+        categoria_id = form.categoria.data
+        
+        #GUARDO LOS DATOS OBTENIDOS EN LA BASE DE DATOS
+        cursor = mysql.connection.cursor()
+        sql = ("INSERT INTO noticias (titulo, descripcion, contenido, id_cat_corresp) VALUES (%s,%s,%s,%s)")
+        cursor.execute(sql, (titulo, descripcion, contenido, categoria_id))
+        mysql.connection.commit()
+        cursor.close
+
+
+        return redirect(url_for('root'))
+    return render_template('index.html', form=form, categorias=categorias)
+
+
+#CONSULTA A LA BASE DE DATOS PARA LAS CATEGORIAS
+def listanoticias():
+    cursor = mysql.connection.cursor()
+    sql = "SELECT * FROM categorias"
+    cursor.execute(sql)
+    categorias = cursor.fetchall()
+    return(categorias)
+
+if __name__ == '__main__':
+    app.run(debug=True)
