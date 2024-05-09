@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Inicio de Sesión</h1>
+    
+<!-- Mostrar mensajes flasheados -->
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        <ul>
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<!-- Formulario de Inicio de Sesión -->
+<form method="POST">
+    {{ form.hidden_tag() }}
+    
+    <div>
+        <label for="email">{{ form.email.label }}</label>
+        {{ form.email(size=20) }}
+        {% if form.email.errors %}
+            <ul>
+                {% for error in form.email.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label for="contraseña">{{ form.contraseña.label }}</label>
+        {{ form.contraseña(size=20, type='password') }}
+        {% if form.contraseña.errors %}
+            <ul>
+                {% for error in form.contraseña.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <div>
+        {{ form.submit() }}
+    </div>
+</form>
+
+<!-- Link para ir a la página de registro -->
+<p>¿No tienes una cuenta? <a href="{{ url_for('register') }}">Regístrate aquí</a></p>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Registro de Usuario</h1>
+    
+<!-- Mostrar mensajes flasheados -->
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        <ul>
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<!-- Formulario de Registro -->
+<form method="POST">
+    {{ form.hidden_tag() }}
+    
+    <div>
+        <label for="email">{{ form.email.label }}</label>
+        {{ form.email(size=20) }}
+        {% if form.email.errors %}
+            <ul>
+                {% for error in form.email.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label for="password">{{ form.contraseña.label }}</label>
+        {{ form.contraseña(size=20, type='password') }}
+        {% if form.contraseña.errors %}
+            <ul>
+                {% for error in form.contraseña.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label for="confirm">{{ form.confirm.label }}</label>
+        {{ form.confirm(size=20, type='password') }}
+        {% if form.confirm.errors %}
+            <ul>
+                {% for error in form.confirm.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <div>
+        <label for="tipo_usuario">{{ form.tipo_usuario.label }}</label>
+        {{ form.tipo_usuario() }}
+        {% if form.tipo_usuario.errors %}
+            <ul>
+                {% for error in form.tipo_usuario.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    
+    <div>
+        {{ form.submit() }}
+    </div>
+</form>
+
+<!-- Link para regresar a la página de inicio de sesión -->
+<p>¿Ya tienes una cuenta? <a href="{{ url_for('login') }}">Iniciar sesión</a></p>
+{% endblock %}
