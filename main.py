@@ -16,8 +16,8 @@ ALLOWED_EXTENSIONS = {'png','jpg','jpeg','gif'}
 app = Flask(__name__)
 #CONFIGURACION A LA BASE DE DATOS
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'br1'
-app.config['MYSQL_PASSWORD'] = '0724-852933bruno'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = '...'
 app.config['MYSQL_DB'] = 'proyecto_noticias'
 
 
