@@ -125,7 +125,7 @@ def register():
         contraseña = generate_password_hash(form.contraseña.data)
         tipo_usuario = form.tipo_usuario.data
         cursor = mysql.connection.cursor()
-        cursor.execute("INSERT INTO usuarios (email, contraseña) VALUES (%s, %s)", (email, contraseña,tipo_usuario))
+        cursor.execute("INSERT INTO usuarios (email, contraseña, tipo_usuario) VALUES (%s, %s)", (email, contraseña,tipo_usuario))
         mysql.connection.commit()
         cursor.close()
         flash('Usuario registrado con éxito. Puedes iniciar sesión.', 'success')
@@ -138,7 +138,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         email = form.email.data
-        contraseña = form.password.data
+        contraseña = form.contraseña.data
         cursor = mysql.connection.cursor()
         cursor.execute("SELECT * FROM usuarios WHERE email = %s", [email])
         user = cursor.fetchone()
