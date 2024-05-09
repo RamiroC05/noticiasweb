@@ -16,8 +16,8 @@ ALLOWED_EXTENSIONS = {'png','jpg','jpeg','gif'}
 app = Flask(__name__)
 #CONFIGURACION A LA BASE DE DATOS
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'PROGRAMACION2023'
+app.config['MYSQL_USER'] = 'br1'
+app.config['MYSQL_PASSWORD'] = '0724-852933bruno'
 app.config['MYSQL_DB'] = 'proyecto_noticias'
 
 
@@ -43,6 +43,7 @@ class PostForm(FlaskForm):
 @app.route('/', methods=['GET', 'POST'])
 def root():
     categorias = listanoticias()
+    titulos=listatitulos()
 
     form = PostForm()
     form.categoria.choices = [(c[0], c[1]) for c in categorias]  
@@ -63,7 +64,7 @@ def root():
 
 
         return redirect(url_for('root'))
-    return render_template('index.html', form=form, categorias=categorias)
+    return render_template('index.html', form=form, categorias=categorias, titulos=titulos)
 
 
 #CONFIGURACION PARA MANEJAR LAS CARGAS DE ARCHIVOS DESDE CKEDITOR
@@ -94,6 +95,19 @@ def upload_file():
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
+
+@app.route('/noticia/<int:id>')
+def noticia(id):
+    noticia = obtener_noticia_por_id(id)
+    return render_template('noticias_detalle.html', noticia=noticia)
+
+def obtener_noticia_por_id(id):
+    cursor = mysql.connection.cursor()
+    query = "SELECT * FROM noticias WHERE idnoticias = %s"
+    cursor.execute(query, (id,))
+    noticia = cursor.fetchone()
+    cursor.close()
+    return noticia
 #CONSULTA A LA BASE DE DATOS PARA LAS CATEGORIAS
 def listanoticias():
     cursor = mysql.connection.cursor()
@@ -102,5 +116,13 @@ def listanoticias():
     categorias = cursor.fetchall()
     return(categorias)
 
+def listatitulos():
+    cursor = mysql.connection.cursor()
+    titulos = "Select * from noticias"
+    cursor.execute(titulos)
+    titulos = cursor.fetchall()
+    cursor.close()
+    return (titulos)
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5001)

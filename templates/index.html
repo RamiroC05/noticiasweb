@@ -42,5 +42,15 @@
     {{ ckeditor.load() }}
     {{ ckeditor.config(name='contenido') }}
 
+    <h1>Noticias</h1>
+    <ul>
+    {% for item in titulos %}
+        <li>
+            <a href="{{ url_for('noticia', id=item[0]) }}">
+                <h2>{{ item[1] }}</h2>
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
 </body>
 </html>
