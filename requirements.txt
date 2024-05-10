@@ -1,0 +1,9 @@
+flask
+flask-ckeditor
+flask-wtf
+wtforms
+flask-mysqldb
+beautifulsoup4
+werkzeug
+flask-login
+jinja2
