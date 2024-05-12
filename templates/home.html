@@ -4,4 +4,11 @@
 {% block content %}
 <h1>Bienvenido a Noticas web</h1>
 <p>Esta es la página de inicio.</p>
+{% if current_user.is_authenticated %}
+    <div>
+        <!-- Contenido que se mostrará solo si el usuario está autenticado -->
+        Bienvenido, {{ current_user.email }}!
+        <!-- Puedes colocar aquí cualquier otro contenido específico para usuarios autenticados -->
+    </div>
+{% endif %}
 {% endblock %}

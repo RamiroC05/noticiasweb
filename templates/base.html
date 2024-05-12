@@ -9,9 +9,13 @@
         <nav>
             <ul>
                 <li><a href="{{ url_for('home') }}">Inicio</a></li>
+                {% if current_user.is_authenticated %}
                 <li><a href="{{ url_for('root') }}">index</a></li>
+                <li><a href="{{ url_for('logout') }}">Cerrar sesion</a></li>
+                {% else %}
                 <li><a href="{{ url_for('register') }}">Registro</a></li>
                 <li><a href="{{ url_for('login') }}">Iniciar Sesión</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>

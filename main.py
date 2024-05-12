@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
+from flask_login import logout_user
 import os
 
 UPLOAD_FOLDER = 'static'
@@ -174,11 +175,11 @@ def register():
         contraseña = generate_password_hash(form.contraseña.data)
         tipo_usuario = form.tipo_usuario.data
         cursor = mysql.connection.cursor()
-        cursor.execute("INSERT INTO usuarios (email, contraseña, tipo_usuario) VALUES (%s, %s)", (email, contraseña,tipo_usuario))
+        cursor.execute("INSERT INTO usuarios (email, contraseña, tipo_usuario) VALUES (%s, %s,%s)", (email, contraseña,tipo_usuario))
         mysql.connection.commit()
         cursor.close()
         flash('Usuario registrado con éxito. Puedes iniciar sesión.', 'success')
-        return redirect(url_for('login'))
+        return redirect(url_for('home'))
     return render_template('register.html', form=form)
 
 # Ruta de Inicio de Sesión
@@ -196,11 +197,16 @@ def login():
         if user and check_password_hash(user[2], contraseña):  # user[2] es la columna de la contraseña hash
             login_user(User(user[0], user[1]))  # user[0] es el ID, user[1] el email
             flash('Inicio de sesión exitoso', 'success')
-            return redirect(url_for('inicio'))  # Ir a la página de inicio o la ruta deseada
+            return redirect(url_for('home'))  # Ir a la página de inicio o la ruta deseada
         else:
             flash('Usuario o contraseña incorrectos', 'danger')
-    
     return render_template('login.html', form=form)
+#Cerrar sesion
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
 
+#Correr el sistema
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5001)
